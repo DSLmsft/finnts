@@ -57,6 +57,7 @@
 #' train_models(run_info)
 #' }
 train_models <- function(run_info,
+                         forecast_horizon = NULL,
                          run_global_models = FALSE,
                          run_local_models = TRUE,
                          global_model_recipes = c("R1"),
@@ -97,6 +98,8 @@ train_models <- function(run_info,
   external_regressors <- ifelse(log_df$external_regressors == "NULL", NULL, strsplit(log_df$external_regressors, split = "---")[[1]])
 
   if (is.null(run_global_models) & date_type %in% c("day", "week")) {
+    run_global_models <- FALSE
+  } else if (is.null(run_global_models) & date_type %in% c("month") & forecast_horizon >6) {
     run_global_models <- FALSE
   } else if (is.null(run_global_models)) {
     run_global_models <- TRUE
